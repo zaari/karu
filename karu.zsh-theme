@@ -1,6 +1,9 @@
 
 # Executed before each prompt
 precmd() {
+  # Window title (useful on remote hosts)
+  print -Pn "\e]0;%n@%m:%/\a"  
+
   # Main prompt
   [[ $EUID == 0 ]] && local karu_privilege_char='×' || local karu_privilege_char='»'
   local karu_exit_color="%(?.${KARU_THEME_LEFT_PROMPT_COLOR}.${KARU_THEME_ERROR_COLOR})"  
