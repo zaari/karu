@@ -7,9 +7,9 @@ Karu is a very minimal ZSH prompt theme inspired by [Void]. The following featur
 * return code
 * git branch name 
 * git branch dirty/clean status
-* root mode
+* root symbol
 * customizable colors
 
-Word *karu* comes from Finnish and means "barren" or "ascetic".
+Word *karu* comes from Finnish language and means "barren" or "ascetic".
 
 [Void]: https://github.com/desyncr/void
