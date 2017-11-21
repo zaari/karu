@@ -1,7 +1,7 @@
 
 # Executed before each prompt
 precmd() {
-  # Window title (useful on remote hosts)
+  # Updste terminal title (useful on remote hosts)
   print -Pn "\e]0;%n@%m:%/\a"  
 
   # Main prompt
@@ -10,12 +10,17 @@ precmd() {
   PROMPT="${karu_exit_color}${karu_privilege_char} %b%f"
   
   # Right prompt
-  RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(git_prompt_info)%b%f"
+  local karu_theme_current_branch="$(git_current_branch)"
+  if [[ "${karu_theme_current_branch}" != "" ]] ; then
+    RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(parse_git_dirty)${karu_theme_current_branch}%b%f"
+  else
+    RPROMPT=""
+  fi
 }
 
 ZSH_THEME_GIT_PROMPT_PREFIX=
 ZSH_THEME_GIT_PROMPT_SUFFIX=
-ZSH_THEME_GIT_PROMPT_DIRTY="•"
+ZSH_THEME_GIT_PROMPT_DIRTY="× "
 ZSH_THEME_GIT_PROMPT_CLEAN=" "
 
 KARU_THEME_LEFT_PROMPT_COLOR="%B%F{blue}"
