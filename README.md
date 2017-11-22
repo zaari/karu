@@ -5,10 +5,10 @@
 Karu is a minimal ZSH prompt theme inspired by [Void]. The following features are supported:
 
 * return code
-* directory name (hidable)
+* directory basename (hidable)
 * git branch name 
 * git branch dirty/clean status
-* privilege symbol with some permissions awareness
+* privilege symbol with some directory permissions awareness
 * customizable colors
 
 Word *karu* comes from Finnish language and means "barren" or "ascetic".

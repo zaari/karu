@@ -29,7 +29,7 @@ precmd() {
   # Updste terminal title (useful on remote hosts)
   print -Pn "\e]0;%n@%m:%/\a"  
 
-  # Main prompt
+  # Main prompt (PS1)
   local karu_exit_color="%(?.${KARU_THEME_LEFT_PROMPT_COLOR}.${KARU_THEME_ERROR_COLOR})"  
   PROMPT="${karu_exit_color}$(karu_theme_privilege_symbol) %b%f"
 
@@ -51,8 +51,9 @@ ZSH_THEME_GIT_PROMPT_PREFIX=
 ZSH_THEME_GIT_PROMPT_SUFFIX=
 ZSH_THEME_GIT_PROMPT_DIRTY="× "
 
-KARU_THEME_LEFT_PROMPT_COLOR="%B%F{blue}"
-KARU_THEME_RIGHT_PROMPT_COLOR="%B%F{blue}"
-KARU_THEME_ERROR_COLOR="%B%F{red}"
-KARU_THEME_SHOW_DIR=1
+# User-defineable variables
+(( ${+KARU_THEME_LEFT_PROMPT_COLOR}  )) || KARU_THEME_LEFT_PROMPT_COLOR="%B%F{blue}"
+(( ${+KARU_THEME_RIGHT_PROMPT_COLOR} )) || KARU_THEME_RIGHT_PROMPT_COLOR="%B%F{blue}"
+(( ${+KARU_THEME_ERROR_COLOR}        )) || KARU_THEME_ERROR_COLOR="%B%F{red}"
+(( ${+KARU_THEME_SHOW_DIR}           )) || KARU_THEME_SHOW_DIR=1
 
