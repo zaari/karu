@@ -10,12 +10,13 @@ karu_theme_dir() {
 
 # Privilege symbol
 karu_theme_privilege_symbol() {
-  stat_ret=( $(stat -Lc "%a %G %U" "`pwd`") )
-  local stat_perm=${stat_ret[1]}
-  local stat_owner=${stat_ret[3]}
   if [[ $EUID == 0 ]] ; then
     echo -n "×"
   else
+    stat_ret=( $(stat -Lc "%a %G %U" "`pwd`") )
+    local stat_perm=${stat_ret[1]}
+    local stat_owner=${stat_ret[3]}
+
     if [[ $(( $stat_perm[-1] & 2 )) != 0 ]]; then
       echo -n "«"
     elif [[ $stat_owner == $USER ]] ; then

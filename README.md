@@ -2,10 +2,10 @@
 
 ![Karu screenshot](https://user-images.githubusercontent.com/8877215/33118835-baaefa2c-cf75-11e7-9c3c-09240968ee83.png)
 
-Karu is a minimal ZSH prompt theme inspired by [Void]. The following features are supported:
+Karu is a clean minimalist ZSH prompt theme inspired by [Void]. The following features are supported:
 
-* exit status visualization
-* trailing component of the current working directory (hidable)
+* exit status
+* current working directory (hidable)
 * git branch name 
 * git branch dirty/clean status
 * privilege symbol with some directory permissions awareness
