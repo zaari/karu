@@ -8,6 +8,7 @@ Karu is a clean minimalist ZSH prompt theme inspired by [Void]. The following fe
 * current working directory (hidable)
 * git branch name 
 * git branch dirty/clean status
+* git branch ahead/behind status
 * privilege symbol with some directory permissions awareness
 * customizable colors
 

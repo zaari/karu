@@ -27,6 +27,26 @@ karu_theme_privilege_symbol() {
   fi
 }
 
+karu_theme_git_symbol() {
+  local branch_name="$(git_current_branch)"
+  if [[ "${branch_name}" != "" ]] ; then
+    if [[ -n "$(command git rev-list origin/$(git_current_branch)..HEAD 2> /dev/null)" ]]; then
+      echo -n " $ZSH_THEME_GIT_PROMPT_AHEAD "
+    elif [[ -n "$(command git rev-list HEAD..origin/$(git_current_branch) 2> /dev/null)" ]]; then
+      echo -n " $ZSH_THEME_GIT_PROMPT_BEHIND "
+    else
+      if [[ "$KARU_THEME_SHOW_DIR" != "0" ]] ; then
+        ZSH_THEME_GIT_PROMPT_CLEAN=" · "
+      else
+        ZSH_THEME_GIT_PROMPT_CLEAN=""
+      fi 
+      echo -n "$(parse_git_dirty)"
+    fi
+    echo "${branch_name}"
+  else
+  fi
+}
+
 # Executed before each prompt
 precmd() {
   # Updste terminal title (useful on remote hosts)
@@ -36,23 +56,15 @@ precmd() {
   local karu_exit_color="%(?.${KARU_THEME_LEFT_PROMPT_COLOR}.${KARU_THEME_ERROR_COLOR})"  
   PROMPT="${karu_exit_color}$(karu_theme_privilege_symbol) %b%f"
 
-  # Clean symbol
-  [[ "$KARU_THEME_SHOW_DIR" != "0" ]] \
-    && ZSH_THEME_GIT_PROMPT_CLEAN="· " \
-    || ZSH_THEME_GIT_PROMPT_CLEAN="" 
-  
   # Right prompt
-  local karu_theme_current_branch="$(git_current_branch)"
-  if [[ "${karu_theme_current_branch}" != "" ]] ; then
-    RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(karu_theme_dir) $(parse_git_dirty)${karu_theme_current_branch}%b%f"
-  else
-    RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(karu_theme_dir)"
-  fi
+  RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(karu_theme_dir)$(karu_theme_git_symbol)%b%f"
 }
 
 ZSH_THEME_GIT_PROMPT_PREFIX=
 ZSH_THEME_GIT_PROMPT_SUFFIX=
-ZSH_THEME_GIT_PROMPT_DIRTY="× "
+ZSH_THEME_GIT_PROMPT_DIRTY=" × "
+ZSH_THEME_GIT_PROMPT_AHEAD="↑"
+ZSH_THEME_GIT_PROMPT_BEHIND="↓"
 
 # User-defineable variables
 (( ${+KARU_THEME_LEFT_PROMPT_COLOR}  )) || KARU_THEME_LEFT_PROMPT_COLOR="%B%F{blue}"
