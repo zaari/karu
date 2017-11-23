@@ -2,7 +2,9 @@
 # Current working directory for the prompt
 karu_theme_dir() {
   if [[ "$KARU_THEME_SHOW_DIR" != "0" ]] ; then
-    echo -n "$(basename `pwd`)"
+    if [[ "$(pwd)" != "$HOME" ]] ; then
+      echo -n "%."
+    fi
   fi
 }
 
