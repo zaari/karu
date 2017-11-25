@@ -28,43 +28,58 @@ karu_theme_privilege_symbol() {
 }
 
 karu_theme_git_symbol() {
-  local branch_name="$(git_current_branch)"
-  if [[ "${branch_name}" != "" ]] ; then
-    if [[ -n "$(command git rev-list origin/$(git_current_branch)..HEAD 2> /dev/null)" ]]; then
-      echo -n " $ZSH_THEME_GIT_PROMPT_AHEAD "
-    elif [[ -n "$(command git rev-list HEAD..origin/$(git_current_branch) 2> /dev/null)" ]]; then
-      echo -n " $ZSH_THEME_GIT_PROMPT_BEHIND "
+  # HEAD test and branch name
+  local ref
+  ref=$(command git symbolic-ref --quiet HEAD 2> /dev/null)
+  local ret=$?
+  if [[ $ret != 0 ]]; then
+    [[ $ret == 128 ]] && return
+    ref=$(command git rev-parse --short HEAD 2> /dev/null) || return
+  fi
+  local current_branch="${ref#refs/heads/}"
+
+  # Ahead, behind and dirtyness tests
+  if [[ -n "$(command git rev-list origin/${current_branch}..HEAD 2> /dev/null)" ]]; then
+    echo -n "$ZSH_THEME_GIT_PROMPT_AHEAD"
+  elif [[ -n "$(command git rev-list HEAD..origin/${current_branch} 2> /dev/null)" ]]; then
+    echo -n "$ZSH_THEME_GIT_PROMPT_BEHIND"
+  else
+    git diff-index --quiet HEAD -- 2>/dev/null
+    if [[ $? -ne 0 ]] ; then
+      echo -n "$ZSH_THEME_GIT_PROMPT_DIRTY"
     else
       if [[ "$KARU_THEME_SHOW_DIR" != "0" ]] ; then
-        ZSH_THEME_GIT_PROMPT_CLEAN=" · "
-      else
-        ZSH_THEME_GIT_PROMPT_CLEAN=""
+        echo -n "$ZSH_THEME_GIT_PROMPT_CLEAN"
       fi 
-      echo -n "$(parse_git_dirty)"
     fi
-    echo "${branch_name}"
-  else
   fi
+  
+  # Branch name
+  echo "${current_branch}"
 }
 
 # Executed before each prompt
 precmd() {
+  local karu_exit_color="%(?.${KARU_THEME_LEFT_PROMPT_COLOR}.${KARU_THEME_ERROR_COLOR})"  
+
   # Updste terminal title (useful on remote hosts)
   print -Pn "\e]0;%n@%m:%/\a"  
 
   # Main prompt (PS1)
-  local karu_exit_color="%(?.${KARU_THEME_LEFT_PROMPT_COLOR}.${KARU_THEME_ERROR_COLOR})"  
   PROMPT="${karu_exit_color}$(karu_theme_privilege_symbol) %b%f"
 
   # Right prompt
   RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(karu_theme_dir)$(karu_theme_git_symbol)%b%f"
 }
 
+# TODO: are there any running background jobs?
+
 ZSH_THEME_GIT_PROMPT_PREFIX=
 ZSH_THEME_GIT_PROMPT_SUFFIX=
 ZSH_THEME_GIT_PROMPT_DIRTY=" × "
-ZSH_THEME_GIT_PROMPT_AHEAD="↑"
-ZSH_THEME_GIT_PROMPT_BEHIND="↓"
+ZSH_THEME_GIT_PROMPT_CLEAN=" · "
+ZSH_THEME_GIT_PROMPT_AHEAD=" ↑ "
+ZSH_THEME_GIT_PROMPT_BEHIND=" ↓ "
 
 # User-defineable variables
 (( ${+KARU_THEME_LEFT_PROMPT_COLOR}  )) || KARU_THEME_LEFT_PROMPT_COLOR="%B%F{blue}"
