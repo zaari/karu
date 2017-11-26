@@ -72,8 +72,6 @@ precmd() {
   RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(karu_theme_dir)$(karu_theme_git_symbol)%b%f"
 }
 
-# TODO: are there any running background jobs?
-
 ZSH_THEME_GIT_PROMPT_PREFIX=
 ZSH_THEME_GIT_PROMPT_SUFFIX=
 ZSH_THEME_GIT_PROMPT_DIRTY=" × "
