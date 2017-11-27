@@ -1,10 +1,8 @@
 
 # Current working directory for the prompt
 karu_theme_dir() {
-  if [[ "$KARU_THEME_SHOW_DIR" != "0" ]] ; then
-    if [[ "$(pwd)" != "$HOME" ]] ; then
-      echo -n "%."
-    fi
+  if [[ "$(pwd)" != "$HOME" ]] ; then
+    echo -n "%."
   fi
 }
 
@@ -48,7 +46,7 @@ karu_theme_git_symbol() {
     if [[ $? -ne 0 ]] ; then
       echo -n "$ZSH_THEME_GIT_PROMPT_DIRTY"
     else
-      if [[ "$KARU_THEME_SHOW_DIR" != "0" ]] ; then
+      if [[ "$KARU_THEME_SHOW_DIR" == "right" ]] ; then
         echo -n "$ZSH_THEME_GIT_PROMPT_CLEAN"
       fi 
     fi
@@ -65,11 +63,18 @@ precmd() {
   # Updste terminal title (useful on remote hosts)
   print -Pn "\e]0;%n@%m:%/\a"  
 
+  # Directory name placement
+  if [[ "$KARU_THEME_SHOW_DIR" == "left" ]] ; then
+    local dir_left="$(karu_theme_dir)"
+  elif [[ "$KARU_THEME_SHOW_DIR" == "right" ]] ; then
+    local dir_right="$(karu_theme_dir)"
+  fi
+  
   # Main prompt (PS1)
-  PROMPT="${karu_exit_color}$(karu_theme_privilege_symbol) %b%f"
+  PROMPT="${KARU_THEME_LEFT_PROMPT_COLOR}${dir_left}${karu_exit_color}$(karu_theme_privilege_symbol) %b%f"
 
   # Right prompt
-  RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}$(karu_theme_dir)$(karu_theme_git_symbol)%b%f"
+  RPROMPT="${KARU_THEME_RIGHT_PROMPT_COLOR}${dir_right}$(karu_theme_git_symbol)%b%f"
 }
 
 ZSH_THEME_GIT_PROMPT_PREFIX=
@@ -83,5 +88,5 @@ ZSH_THEME_GIT_PROMPT_BEHIND=" ↓ "
 (( ${+KARU_THEME_LEFT_PROMPT_COLOR}  )) || KARU_THEME_LEFT_PROMPT_COLOR="%B%F{blue}"
 (( ${+KARU_THEME_RIGHT_PROMPT_COLOR} )) || KARU_THEME_RIGHT_PROMPT_COLOR="%B%F{blue}"
 (( ${+KARU_THEME_ERROR_COLOR}        )) || KARU_THEME_ERROR_COLOR="%B%F{red}"
-(( ${+KARU_THEME_SHOW_DIR}           )) || KARU_THEME_SHOW_DIR=1
+(( ${+KARU_THEME_SHOW_DIR}           )) || KARU_THEME_SHOW_DIR="right" # left, right or off
 
