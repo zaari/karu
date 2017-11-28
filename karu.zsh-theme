@@ -16,7 +16,7 @@ karu_theme_privilege_symbol() {
     local stat_owner=${stat_ret[3]}
 
     if [[ $(( $stat_perm[-1] & 2 )) != 0 ]]; then
-      echo -n "«"
+      echo -n "∞"
     elif [[ $stat_owner == $USER ]] ; then
       echo -n "»"
     else
